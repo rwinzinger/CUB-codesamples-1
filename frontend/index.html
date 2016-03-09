@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CUB restful demo</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="app.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular-resource.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular-route.js"></script>
+  <script src="myApp.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="AppController">
+  <div class="page-header">
+    <div class="container">
+      <h1>CUB <small>restful demo</small></h1>
+    </div>
+  </div>
+
+  <div class="container" id="errorpanel" ng-show="errorMsg" class="ng-hide">
+    <div class="alert alert-danger">
+      <strong>Error!</strong><span>&nbsp;{{ errorMsg }}</span>
+    </div>
+  </div>
+
+  <div class="container" id="loginpanel" ng-hide="customer" class="ng-hide">
+      <div class="panel panel-default">
+        <div class="panel-heading">User Login</div>
+        <div class="panel-body">
+          <div class="col-md-2">
+            <input type="text" class="form-control"
+              ng-model="username" 
+              placeholder="username" />
+          </div>
+          <div class="col-md-2">
+            <input type="password" class="form-control"
+              ng-model="password" 
+              placeholder="password" />
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-primary" ng-click="login()">Sign In!</button>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="container" id="customerinfo" ng-show="customer" class="ng-hide">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-11">
+            <span>User Information</span>
+          </div>  
+          <div class="col-md-1">
+            <button type="button" class="btn btn-danger btn-xs" ng-click="logout()">Logout</button>
+          </div>   
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-2">
+            <span>{{ customer.username }}</span>
+          </div> 
+          <div class="col-md-2">
+            <span>{{ authToken }}</span>
+          </div>   
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <span>{{ customer.firstname }}</span>
+          </div>
+          <div class="col-md-2">
+            <span>{{ customer.lastname }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default" ng-show="articles">
+          <div class="panel-heading">
+            Articles
+          </div>
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Brand</th>
+                  <th>Model</th>
+                  <th>Price</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="article in articles">
+                  <td ng-click="setSelected(article);">{{article.brand}}</td>
+                  <td ng-click="setSelected(article);">{{article.model}}</td>
+                  <td ng-click="setSelected(article);">{{article.price}}</td>
+                  <td><button type="button" class="btn btn-primary btn-xs" ng-click="addToCart(article);">+</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel-footer">
+            <button type="button"
+                    class="btn btn-primary btn-xs"
+                    ng-disabled="!prevArticles"
+                    ng-click="loadArticles(prevArticles.href)">&lt;</button>
+            <button type="button"
+                    class="btn btn-primary btn-xs"
+                    ng-disabled="!nextArticles"
+                    ng-click="loadArticles(nextArticles.href)">&gt;</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="panel panel-default" ng-show="shoppingCart">
+          <div class="panel-heading">
+            Shopping Cart
+          </div>
+          <div class="panel-body">
+            <div class="container">
+                <div class="row">
+                  <div class="col-md-3">Articles: </div>
+                  <div class="col-md-9">{{shoppingCart.articles.length}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Sum of Prices: </div>
+                  <div class="col-md-9">{{shoppingCart.sumArticles}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Sum of Shipping: </div>
+                  <div class="col-md-9">{{shoppingCart.sumShipping}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Overall: </div>
+                  <div class="col-md-9">{{shoppingCart.overallPrice}}</div>
+                </div>
+              </div>
+          </div>
+          <div class="panel-footer">
+            <button type="button"
+                    class="btn btn-warning btn-xs"
+                    ng-click="buyArticles()">buy now!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="container" ng-show="detailedArticle">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Detailed Article Information: <strong>{{detailedArticle.brand}} {{detailedArticle.model}}</strong>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-4">
+              article image here
+            </div>
+            <div class="col-md-8">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-3">Article ID: </div>
+                  <div class="col-md-9">{{detailedArticle.articleid}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Type: </div>
+                  <div class="col-md-9">{{detailedArticle.type}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Brand: </div>
+                  <div class="col-md-9">{{detailedArticle.brand}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Model: </div>
+                  <div class="col-md-9">{{detailedArticle.model}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Price: </div>
+                  <div class="col-md-9">{{detailedArticle.price}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">Shipping: </div>
+                  <div class="col-md-9">{{detailedArticle.shipping}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="page-footer">
+    <div class="container">
+      <h1>CUB <small>restful demo</small></h1>
+    </div>
+  </div>
+</body>
+</html>
+
