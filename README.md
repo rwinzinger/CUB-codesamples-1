@@ -26,6 +26,7 @@ homework & concepts for further study
 - content negotiation
 
 build services: `mvn clean intall`
+
 start services: `java -jar <service>.jar --server.port=<port> [--spring.active.profiles=<profile1,profile2,...>]`
 
 send POST data to service: `curl -X POST localhost:9000/loginsrv/api/v1/login -H "Content-Type: application/json" -d '{"username":"dduck", "password":"secret"}' -vvv`
