@@ -2,6 +2,12 @@
 
 Code walkthrough #1, restful communication
 
+you will need
+- Java 8
+- Maven 3.3
+- curl (recommended)
+- MongoDB (admin-UI recommended, MongoHub for Mac, MongoVUE for Windows)
+
 online shop inluding
 - login service
 - customer service
@@ -20,10 +26,14 @@ concepts shown
 - error codes (BAD REQUEST, NOT FOUND, UNAUTHORIZED)
 
 homework & concepts for further study
-- cart service
-- idempotency (PUT)
-- caching (article detail)
-- content negotiation
+- cart service: retrieve current/open cart if available; create a new cart if no current/open cart is available; update cart; checkout/buy everything in the shopping cart (cart will be closed then); store cart contents in DB for later retrieval and to survice service restart
+- frontend: show shopping cart detail; add functionality to delete items from the cart
+- idempotency: realize creating/updating a cart in an idempotent way; frontend should be able to do silent retries if service is not available
+- caching: add cache information to article details to avoid the frontend hitting the service/database with each request
+- content negotiation: add invoice service with one endpoint delivering an overview of all closed shopping carts of the customer; deliver content as raw JSON or PDF depending on accept header in the request
+- (advanced) article service: add endpoint to send images of articles to the frontend
+
+Tooling
 
 build services: `mvn clean intall`
 
