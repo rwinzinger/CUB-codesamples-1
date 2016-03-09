@@ -8,13 +8,15 @@ you will need
 - curl (recommended)
 - MongoDB (admin-UI recommended, MongoHub for Mac, MongoVUE for Windows)
 
-online shop inluding
+our goal is to build an online shop inluding
 - login service
 - customer service
 - article service
+
 (based on spring-boot)
 
 - simple html/javascript frontend
+
 (based on angular, bootstrap)
 
 concepts shown
