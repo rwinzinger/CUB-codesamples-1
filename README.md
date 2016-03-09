@@ -37,8 +37,24 @@ homework & concepts for further study
 
 Tooling
 
-build services: `mvn clean intall`
+build services: `mvn clean intall` from the toplevel directory will build all the projects
+
+send POST data to service: `curl -X POST localhost:9000/loginsrv/api/v1/login -H "Content-Type: application/json" -d '{"username":"dduck", "password":"secret"}' -vvv`
 
 start services: `java -jar <service>.jar --server.port=<port> [--spring.active.profiles=<profile1,profile2,...>]`
 
-send POST data to service: `curl -X POST localhost:9000/loginsrv/api/v1/login -H "Content-Type: application/json" -d '{"username":"dduck", "password":"secret"}' -vvv`
+Usually, the services would be running on different machines and behind proxies/loadbalancers. For this demo they are intended to run on a single machine on different ports:
+
+login-service: port 9000, launch from the toplevel directory with `java -jar login-service/target/login-service-1.0-SNAPSHOT.jar --server.port=9000 --spring.profiles.active=remote`
+
+customer-service: port 9100, launch from the toplevel directory with `java -jar customer-service/target/customer-service-1.0-SNAPSHOT.jar --server.port=9100`
+
+article-service: port 9200, launch from the toplevel directory with `java -jar article-service/target/article-service-1.0-SNAPSHOT.jar --server.port=9200`
+
+
+
+Populate MongoDB
+
+You can insert data into the database with simple endpoints in the customer- and article service. Just enter their adresses in the browser:
+
+http://localhost:9100/customersrv/api/v1/populate or http://localhost:9300/articlesrv/api/v1/populate (please use the ports you assigned to the services at startup)
