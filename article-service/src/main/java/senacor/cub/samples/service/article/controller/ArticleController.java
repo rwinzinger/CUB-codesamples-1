@@ -106,40 +106,6 @@ public class ArticleController {
         return articleListCommand.getArticles(pagenum, pagesize);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // ---- just for demo, please ignore
 
     @Autowired

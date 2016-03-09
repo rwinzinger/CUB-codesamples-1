@@ -64,7 +64,7 @@ myApp.controller('AppController', ['$scope', '$http', function($scope, $http) {
     $scope.detailedArticle = null;
     
     if (href == null) {
-      href = "http://localhost:9200/articlesrv/api/v1/articles";
+      href = "http://localhost:9200/articlesrv/api/v1/articles?ps=7";
     }
 
     // get article-list
