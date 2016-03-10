@@ -13,7 +13,7 @@ our goal is to build an online shop inluding
 - customer service
 - article service
 
-(based on spring-boot [(partial translation of Spring documentation)](https://waylau.gitbooks.io/spring-framework-4-reference/content))
+(based on spring-boot)
 
 - simple html/javascript frontend
 
