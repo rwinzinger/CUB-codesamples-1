@@ -13,7 +13,7 @@ our goal is to build an online shop inluding
 - customer service
 - article service
 
-(based on spring-boot)
+(based on spring-boot [(partial translation of Spring documentation)](https://waylau.gitbooks.io/spring-framework-4-reference/content))
 
 - simple html/javascript frontend
 
@@ -60,3 +60,7 @@ Populate MongoDB
 You can insert data into the database with simple endpoints in the customer- and article service. Just enter their adresses in the browser:
 
 http://localhost:9100/customersrv/api/v1/populate or http://localhost:9300/articlesrv/api/v1/populate (please use the ports you assigned to the services at startup)
+
+
+
+If you have (security) problems while accessing the services from the HTML/JavaScript, this is most likely due to CORS (by default your browser might not allow you other URLs than the one where the initial page was loaded from). Please check how to override this feature in your browser for running the demo.
