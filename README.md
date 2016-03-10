@@ -46,6 +46,7 @@ start services: `java -jar <service>.jar --server.port=<port> [--spring.active.p
 Usually, the services would be running on different machines and behind proxies/loadbalancers. For this demo they are intended to run on a single machine on different ports:
 
 login-service: port 9000, launch from the toplevel directory with `java -jar login-service/target/login-service-1.0-SNAPSHOT.jar --server.port=9000 --spring.profiles.active=remote`
+Please note that you have to provide `--spring.profiles.active=remote` or `--spring.profiles.active=local` for the login-service so that it knows whether it will do the customer lookup directly (local) or via customer service (remote).
 
 customer-service: port 9100, launch from the toplevel directory with `java -jar customer-service/target/customer-service-1.0-SNAPSHOT.jar --server.port=9100`
 
