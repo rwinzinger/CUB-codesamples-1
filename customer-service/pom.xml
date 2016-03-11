@@ -47,6 +47,16 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <skipDockerBuild>false</skipDockerBuild>
+                    <imageName>cub/customer-service</imageName>
+                    <maintainer>rwinzinger</maintainer>
+                    <expose>8080</expose>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

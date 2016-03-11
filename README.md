@@ -64,3 +64,37 @@ http://localhost:9100/customersrv/api/v1/populate or http://localhost:9300/artic
 
 
 If you have (security) problems while accessing the services from the HTML/JavaScript, this is most likely due to CORS (by default your browser might not allow you other URLs than the one where the initial page was loaded from). Please check how to override this feature in your browser for running the demo.
+
+
+
+Docker
+
+Building the docker-image for the ReST service will happen with mvn clean package docker:build
+
+The port of the ReST-service (8080 by default) will be exposed by the container (see pom.xml)
+
+Start the docker container with docker run customer-service (probably very slow, see below)
+
+Get the IP-address of the container with docker ps and docker inspect <containerid> (look for IPAddress)
+
+Test the service with curl -X GET 172.17.0.2:8080/customersrv/api/v1/ping
+
+We are mapping the host's /dev/urandom to the container to "get more entropy" - otherwise Tomcat will need much longer to create a secret at startup (see above).
+
+docker run -v /dev/urandom:/dev/random customer-service
+
+Rebuilding images might leave "untagged" images (named "<none>") - remove them with docker rmi -f <imageid>
+
+Note: On a Mac/Windows system, Docker is running inside a VM (the docker-machine) - to access the exposed port, we need to forward it.
+
+docker run -v /dev/urandom:/dev/random -p 18080:8080 customer-service
+
+Now, the original port 8080 is mapped to the VM's port 18080 (get VM's IP with docker-machine ip default)
+
+curl -X GET 192.168.99.100:18080/customersrv/api/v1/ping
+
+You also can SSH into the vm (docker-machine ssh default) and directly curl the container
+
+curl -X GET 172.17.0.2:8080/customersrv/api/v1/ping (note the different IP and port)
+
+Note: You can create environment variables with -e and Spring-Boot accepts properties via environment. docker run -e "SPRING_PROFILES_ACTIVE=local" -v /dev/urandom:/dev/random -p 18080:8080 login-service would start the login-service in local-mode.
