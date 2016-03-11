@@ -1,0 +1,59 @@
+#web:
+
+login-service:
+  image: cub/login-service
+  container_name: loginservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+  links:
+   - customer-service:customerservice
+   - mongodb:mongoserver
+  ports:
+   # forward the service port through the vm to the host
+   - "9000:8080"
+  environment:
+   SPRING_PROFILES_ACTIVE: remote
+   # tell spring boot where to find mongodb (if started with profile "local")
+   SPRING_DATA_MONGODB_HOST: mongoserver
+
+customer-service:
+  image: cub/customer-service
+  container_name: customerservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+  links:
+   - mongodb:mongoserver
+  ports:
+   # forward the service port through the vm to the host
+   - "9100:8080"
+  environment:
+   # tell spring boot where to find mongodb
+   SPRING_DATA_MONGODB_HOST: mongoserver
+
+article-service:
+  image: cub/article-service
+  container_name: articleservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+  links:
+   - mongodb:mongoserver
+  ports:
+   # forward the service port through the vm to the host
+   - "9200:8080"
+  environment:
+   # tell spring boot where to find mongodb
+   SPRING_DATA_MONGODB_HOST: mongoserver
+
+mongodb:
+  image: mongo
+  container_name: mongo
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__applications/mongo_data/db/cub-codewalkthrough/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27017:27017"

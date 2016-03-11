@@ -94,3 +94,9 @@ You also can SSH into the VM (`docker-machine ssh default`) and directly curl th
 `curl -X GET 172.17.0.2:8080/customersrv/api/v1/ping` (note the different IP and port)
 
 Note: You can create environment variables with `-e` and Spring-Boot accepts properties via environment. `docker run -e "SPRING_PROFILES_ACTIVE=local" -v /dev/urandom:/dev/random -p 18080:8080 login-service` would start the login-service in local-mode.
+
+## Docker Compose
+
+Start all containers (login-service, customer-service, article-service and mongodb) at once with docker-compose up (in folder docker/compose)
+
+All ports are forwarded as seen above.

@@ -16,7 +16,7 @@ myApp.controller('AppController', ['$scope', '$http', function($scope, $http) {
       $scope.errorMsg = null;
 
       // login customer & get customer info
-      $http.post("http://localhost:9000/loginsrv/api/v1/login", {"username":$scope.username, "password":$scope.password})
+      $http.post("http://192.168.99.100:9000/loginsrv/api/v1/login", {"username":$scope.username, "password":$scope.password})
       .then(
         function(loginResponse) {
           $scope.authToken = loginResponse.data.token;
@@ -64,7 +64,7 @@ myApp.controller('AppController', ['$scope', '$http', function($scope, $http) {
     $scope.detailedArticle = null;
     
     if (href == null) {
-      href = "http://localhost:9200/articlesrv/api/v1/articles?ps=7";
+      href = "http://192.168.99.100:9200/articlesrv/api/v1/articles?ps=7";
     }
 
     // get article-list
