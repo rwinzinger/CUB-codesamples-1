@@ -97,6 +97,6 @@ Note: You can create environment variables with `-e` and Spring-Boot accepts pro
 
 ## Docker Compose
 
-Start all containers (login-service, customer-service, article-service and mongodb) at once with docker-compose up (in folder docker/compose)
+Start all containers (login-service, customer-service, article-service and mongodb) at once with `docker-compose up` (in folder `docker/compose`)
 
 All ports are forwarded as seen above.
