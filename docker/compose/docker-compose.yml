@@ -58,19 +58,6 @@ mongodb:
    # forward the mongo port through the vm to the host
    - "27017:27017"
 
-eventstore:
-  image: cub/eventstore
-  volumes:
-     # mount the host's /dev/urandom to speed up creating the secret
-     - /dev/urandom:/dev/random
-     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/db:/var/eventstore/db
-     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/log:/var/eventstore/log
-  ports:
-   - "2113:2113"
-  environment:
-   EVENTSTORE_DB: /var/eventstore/db
-   EVENTSTORE_LOG: /var/eventstore/log
-
 nginx:
   image: cub/nginx
   container_name: nginx
@@ -86,3 +73,16 @@ nginx:
   ports:
    # forward the nginx port through the vm to the host
    - "10080:80"
+
+eventstore:
+  image: cub/eventstore
+  volumes:
+     # mount the host's /dev/urandom to speed up creating the secret
+     - /dev/urandom:/dev/random
+     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/db:/var/eventstore/db
+     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/log:/var/eventstore/log
+  ports:
+   - "2113:2113"
+  environment:
+   EVENTSTORE_DB: /var/eventstore/db
+   EVENTSTORE_LOG: /var/eventstore/log

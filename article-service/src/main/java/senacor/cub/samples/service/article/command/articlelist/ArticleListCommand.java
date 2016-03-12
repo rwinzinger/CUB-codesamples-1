@@ -23,7 +23,7 @@ public class ArticleListCommand {
         Articles articles = new Articles(page.getTotalElements(), pagenum, page.getNumberOfElements());
         for (Article article : page) {
             ArticleDigest articleDigest = ArticleDigest.fromArticle(article);
-            articleDigest.add(new Link("http://localhost:9200/articlesrv/api/v1/article/"+article.getArticleid(), "detail"));
+            articleDigest.add(new Link("/articlesrv/api/v1/article/"+article.getArticleid(), "detail"));
             articles.getArticles().add(articleDigest);
         }
 
@@ -38,6 +38,6 @@ public class ArticleListCommand {
     }
 
     private String linkToPage(Pageable pageable) {
-        return "http://localhost:9200/articlesrv/api/v1/articles?pn="+pageable.getPageNumber()+"&ps="+pageable.getPageSize();
+        return "/articlesrv/api/v1/articles?pn="+pageable.getPageNumber()+"&ps="+pageable.getPageSize();
     }
 }
