@@ -15,19 +15,19 @@ import org.springframework.web.client.RestTemplate;
 public class LoginCommandRemote implements LoginCommand{
 
     public Token verify(Credentials credentials) {
-        String urlToCustomer = "http://customerservice:8080/customersrv/api/v1/customer/"+credentials.getUsername();
-        String urlToCustomerExternal = "http://192.168.99.100:9100/customersrv/api/v1/customer/"+credentials.getUsername();
+        String urlPrefix = "http://customerservice:8080";
+        String urlToCustomer = "/customersrv/api/v1/customer/"+credentials.getUsername();
 
         RestTemplate getCustomerTemplate = new RestTemplate();
         Customer customer = null;
         try {
-            customer = getCustomerTemplate.getForObject(urlToCustomer, Customer.class);
+            customer = getCustomerTemplate.getForObject(urlPrefix+urlToCustomer, Customer.class);
         } catch (HttpClientErrorException e) {
             throw new LoginFailedException();
         }
 
         Token token = new Token(new String(Base64Utils.encode(customer.getPassword().getBytes())));
-        token.add(new Link(urlToCustomerExternal, "customer"));
+        token.add(new Link(urlToCustomer, "customer"));
 
         return token;
     }

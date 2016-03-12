@@ -43,7 +43,8 @@ send POST data to service: `curl -X POST localhost:9000/loginsrv/api/v1/login -H
 
 start services: `java -jar <service>.jar --server.port=<port> [--spring.active.profiles=<profile1,profile2,...>]`
 
-Usually, the services would be running on different machines and behind proxies/loadbalancers. For this demo they are intended to run on a single machine on different ports:
+Usually, the services would be running on different machines and behind proxies/loadbalancers. For this demo they are 
+intended to run on a single machine on different ports:
 
 login-service: port 9000, launch from the toplevel directory with `java -jar login-service/target/login-service-1.0-SNAPSHOT.jar --server.port=9000 --spring.profiles.active=remote`
 
@@ -55,15 +56,24 @@ article-service: port 9200, launch from the toplevel directory with `java -jar a
 
 ## Populate MongoDB
 
-You can insert data into the database with simple endpoints in the customer- and article service. Just enter their adresses in the browser:
+You can insert data into the database with simple endpoints in the customer- and article service. Just enter their 
+adresses in the browser:
 
-http://localhost:9100/customersrv/api/v1/populate or http://localhost:9300/articlesrv/api/v1/populate (please use the ports you assigned to the services at startup)
+http://localhost:9100/customersrv/api/v1/populate or http://localhost:9300/articlesrv/api/v1/populate (please use the 
+ports you assigned to the services at startup)
 
 ## CORS
 
-If you have (security) problems while accessing the services from the HTML/JavaScript, this is most likely due to CORS (by default your browser might not allow you other URLs than the one where the initial page was loaded from). Please check how to override this feature in your browser for running the demo.
+If you have (security) problems while accessing the services from the HTML/JavaScript, this is most likely due to CORS 
+(by default your browser might not allow you other URLs than the one where the initial page was loaded from). Please 
+check how to override this feature in your browser for running the demo.
 
 ## Docker
+
+Important notice: If you are running Docker on Mac/Windows it will run inside a virtual machine (docker-machine). 
+Therefore, ports are not directly visible to the Docker host (your Mac/Windows system) and it's also not possible 
+to mount arbitrary folders from the Docker host to the containers. Please see the comments below marked with "Docker 
+on Mac/Windows note".
 
 Building the docker-image for the ReST service will happen with `mvn clean package docker:build`
 
@@ -75,13 +85,15 @@ Get the IP-address of the container with `docker ps` and `docker inspect <contai
 
 Test the service with `curl -X GET 172.17.0.2:8080/customersrv/api/v1/ping`
 
-We are mapping the host's `/dev/urandom` to the container to "get more entropy" - otherwise Tomcat will need much longer to create a secret at startup (see above).
+We are mapping the host's `/dev/urandom` to the container to "get more entropy" - otherwise Tomcat will need much 
+longer to create a secret at startup (see above).
 
 `docker run -v /dev/urandom:/dev/random customer-service`
 
 Rebuilding images might leave "untagged" images (named "`<none>`") - remove them with `docker rmi -f <imageid>`
 
-Note: On a Mac/Windows system, Docker is running inside a VM (the docker-machine, mine is called "default") - to access the exposed port, we need to forward it.
+**Docker on Mac/Windows note**: On a Mac/Windows system, Docker is running inside a VM (the docker-machine, mine is 
+called "default") - to access the exposed port, we need to forward it.
 
 `docker run -v /dev/urandom:/dev/random -p 18080:8080 customer-service`
 
@@ -97,9 +109,26 @@ Note: You can create environment variables with `-e` and Spring-Boot accepts pro
 
 ## Docker Compose
 
-Start all containers (login-service, customer-service, article-service and mongodb) at once with `docker-compose up` (in folder `docker/compose`)
+Start all containers (login-service, customer-service, article-service and mongodb) at once with docker-compose up (in 
+folder docker/compose)
 
 All ports are forwarded as seen above.
+
+## nginx
+
+There is a Dockerfile to build a customized version of the official nginx image in docker/images/nginx
+
+Create the image with docker build -t cub/nginx in that folder
+
+The Dockerfile will copy the nginx configuration file to the image. If you change the configuration, you'll have to 
+rebuild the image.
+
+nginx expects to find the HTML files in /usr/share/nginx/html - there will be a volume mapping for that in the compose-file.
+ 
+**Docker on Mac/Windows note**: On a Mac/Windows system, Docker is running inside a VM and volume mounts are only possible 
+between to containers and this machine. It is not possible to mount arbitrary folders into the containers. When the VM 
+(docker-machine) launches, the home-folder of the current user ($HOME, /Users/<username> on Mac) is mounted into the VM. So,
+it' possible to mount any folder inside your home-folder into your containers.
 
 ## Event Sourcing (akka + eventstore)
 
