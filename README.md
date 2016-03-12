@@ -100,3 +100,9 @@ Note: You can create environment variables with `-e` and Spring-Boot accepts pro
 Start all containers (login-service, customer-service, article-service and mongodb) at once with `docker-compose up` (in folder `docker/compose`)
 
 All ports are forwarded as seen above.
+
+## Event Sourcing (akka + eventstore)
+
+There is a Dockerfile in docker/images/eventstore which customizes the official eventstore image (paths for db and log)
+ 
+Create the new image with calling docker builf -t cub/eventstore . in that folder

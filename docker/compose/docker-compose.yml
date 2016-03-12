@@ -53,7 +53,20 @@ mongodb:
   volumes:
    # mount the host's /dev/urandom to speed up creating the secret
    - /dev/urandom:/dev/random
-   - /Volumes/Development/__applications/mongo_data/db/cub-codewalkthrough/data/db:/data/db
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/data/db:/data/db
   ports:
    # forward the mongo port through the vm to the host
    - "27017:27017"
+
+eventstore:
+  image: cub/eventstore
+  volumes:
+     # mount the host's /dev/urandom to speed up creating the secret
+     - /dev/urandom:/dev/random
+     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/db:/var/eventstore/db
+     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/log:/var/eventstore/log
+  ports:
+   - "2113:2113"
+  environment:
+   EVENTSTORE_DB: /var/eventstore/db
+   EVENTSTORE_LOG: /var/eventstore/log
