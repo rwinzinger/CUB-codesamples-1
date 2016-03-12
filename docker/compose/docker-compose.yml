@@ -57,3 +57,15 @@ mongodb:
   ports:
    # forward the mongo port through the vm to the host
    - "27017:27017"
+
+nginx:
+  image: cub/nginx
+  container_name: nginx
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   # find a better solution for this one
+   - $HOME/dockermounts/cub-code-walkthrough/nginx/html:/etc/nginx/html
+  ports:
+     # forward the nginx port through the vm to the host
+     - "10080:80"
