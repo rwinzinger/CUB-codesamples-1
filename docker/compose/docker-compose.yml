@@ -66,6 +66,10 @@ nginx:
    - /dev/urandom:/dev/random
    # find a better solution for this one
    - $HOME/dockermounts/cub-code-walkthrough/nginx/html:/etc/nginx/html
+  links:
+   - login-service:loginservice
+   - customer-service:customerservice
+   - article-service:articleservice
   ports:
-     # forward the nginx port through the vm to the host
-     - "10080:80"
+   # forward the nginx port through the vm to the host
+   - "10080:80"

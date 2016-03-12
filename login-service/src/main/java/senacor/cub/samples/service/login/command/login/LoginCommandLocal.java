@@ -17,6 +17,8 @@ public class LoginCommandLocal implements LoginCommand {
     private CustomerRepository repository;
 
     public Token verify(Credentials credentials) {
+        String urlToCustomer = "/customersrv/api/v1/customer/"+credentials.getUsername();
+
         Customer customer = repository.findByUsername(credentials.getUsername());
 
         if (customer == null) {
@@ -24,7 +26,7 @@ public class LoginCommandLocal implements LoginCommand {
         }
 
         Token token = new Token(new String(Base64Utils.encode(customer.getPassword().getBytes())));
-        token.add(new Link("http://localhost:9100/customersrv/api/v1/customer/"+credentials.getUsername(), "customer"));
+        token.add(new Link(urlToCustomer, "customer"));
 
         return token;
     }
