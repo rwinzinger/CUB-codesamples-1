@@ -41,7 +41,7 @@ build services: `mvn clean intall` from the toplevel directory will build all th
 
 send POST data to service: `curl -X POST localhost:9000/loginsrv/api/v1/login -H "Content-Type: application/json" -d '{"username":"dduck", "password":"secret"}' -vvv`
 
-start services: `java -jar <service>.jar --server.port=<port> [--spring.active.profiles=<profile1,profile2,...>]`
+start services: `java -jar <service>.jar --server.port=<port> [--spring.profiles.active=<profile1,profile2,...>]`
 
 Usually, the services would be running on different machines and behind proxies/loadbalancers. For this demo they are 
 intended to run on a single machine on different ports:
