@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import senacor.cub.samples.service.customer.command.userdetail.Customer;
+import senacor.cub.samples.service.customer.command.Customer;
 import senacor.cub.samples.service.customer.command.CustomerRepository;
-import senacor.cub.samples.service.customer.command.userdetail.CustomerDetailCommand;
+import senacor.cub.samples.service.customer.command.createuser.CreateCustomerCommand;
+import senacor.cub.samples.service.customer.command.readdetail.ReadDetailCommand;
 import senacor.cub.samples.technical.ping.Pong;
 
 /**
@@ -18,7 +19,10 @@ import senacor.cub.samples.technical.ping.Pong;
 @RequestMapping(value = "/customersrv/api/v1")
 public class CustomerController {
     @Autowired
-    private CustomerDetailCommand customerDetailCommand;
+    private ReadDetailCommand customerDetailCommand;
+
+    @Autowired
+    private CreateCustomerCommand customerCreationCommand;
 
     @RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public Pong ping() {
@@ -40,8 +44,8 @@ public class CustomerController {
     public String populate() {
         repository.deleteAll();
 
-        repository.save(new Customer("187", "rhwinzin", "Ralph", "Winzinger", "secret"));
-        repository.save(new Customer("207", "mmouse", "Mickey", "Mouse", "secret"));
+        customerCreationCommand.createCustomer(new Customer(null, "rhwinzin", "Ralph", "Winzinger", "secret"));
+        customerCreationCommand.createCustomer(new Customer(null, "mmouse", "Mickey", "Mouse", "secret"));
 
         return repository.findAll().size()+" customers created";
     }

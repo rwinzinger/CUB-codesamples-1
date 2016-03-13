@@ -10,8 +10,6 @@ import senacor.cub.samples.service.article.command.articlelist.ArticleListComman
 import senacor.cub.samples.service.article.command.articlelist.Articles;
 import senacor.cub.samples.technical.ping.Pong;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/articlesrv/api/v1")
 public class ArticleController {

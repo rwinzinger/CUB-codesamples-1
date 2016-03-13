@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
  * Customer Service
  */
 
-@ComponentScan
+@ComponentScan(basePackages = { "senacor.cub.samples.service", "senacor.cub.samples.technical" })
 @EnableAutoConfiguration
 public class App {
     public static void main( String[] args ) {

@@ -1,4 +1,4 @@
-package senacor.cub.samples.service.customer.command.userdetail;
+package senacor.cub.samples.service.customer.command;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
