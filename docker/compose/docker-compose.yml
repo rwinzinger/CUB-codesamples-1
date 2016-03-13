@@ -8,7 +8,7 @@ login-service:
    - /dev/urandom:/dev/random
   links:
    - customer-service:customerservice
-   - mongodb:mongoserver
+   - mongodb-loginservice:mongoserver
   ports:
    # forward the service port through the vm to the host
    - "9000:8080"
@@ -24,7 +24,7 @@ customer-service:
    # mount the host's /dev/urandom to speed up creating the secret
    - /dev/urandom:/dev/random
   links:
-   - mongodb:mongoserver
+   - mongodb-customerservice:mongoserver
   ports:
    # forward the service port through the vm to the host
    - "9100:8080"
@@ -39,7 +39,7 @@ article-service:
    # mount the host's /dev/urandom to speed up creating the secret
    - /dev/urandom:/dev/random
   links:
-   - mongodb:mongoserver
+   - mongodb-articleservice:mongoserver
   ports:
    # forward the service port through the vm to the host
    - "9200:8080"
@@ -47,16 +47,38 @@ article-service:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
 
-mongodb:
+mongodb-customerservice:
   image: mongo
-  container_name: mongo
+  container_name: mongo-customerservice
   volumes:
    # mount the host's /dev/urandom to speed up creating the secret
    - /dev/urandom:/dev/random
-   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/data/db:/data/db
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/customer/data/db:/data/db
   ports:
    # forward the mongo port through the vm to the host
    - "27017:27017"
+
+mongodb-loginservice:
+  image: mongo
+  container_name: mongo-loginservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/login/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27117:27017"
+
+mongodb-articleservice:
+  image: mongo
+  container_name: mongo-articleservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/article/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27217:27017"
 
 nginx:
   image: cub/nginx
@@ -82,6 +104,7 @@ eventstore:
      - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/db:/var/eventstore/db
      - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/log:/var/eventstore/log
   ports:
+   - "1113:1113"
    - "2113:2113"
   environment:
    EVENTSTORE_DB: /var/eventstore/db
