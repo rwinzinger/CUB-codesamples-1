@@ -13,7 +13,7 @@ import senacor.cub.samples.technical.es.Command;
  * Created by rwinzing on 08.03.16.
  */
 @Component
-@Profile("local")
+// @Profile("local")
 public class LoginCommandLocal extends Command implements LoginCommand {
     @Autowired
     private CustomerAccountRepository repository;

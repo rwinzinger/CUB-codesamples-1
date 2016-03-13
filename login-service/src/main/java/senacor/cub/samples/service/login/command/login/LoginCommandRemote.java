@@ -12,8 +12,8 @@ import senacor.cub.samples.technical.es.Command;
 /**
  * Created by rwinzing on 08.03.16.
  */
-@Component
-@Profile("remote")
+// @Component
+// @Profile("remote")
 public class LoginCommandRemote extends Command implements LoginCommand{
 
     public Token verify(Credentials credentials) {
