@@ -49,4 +49,11 @@ public class CustomerController {
 
         return repository.findAll().size()+" customers created";
     }
+
+    @RequestMapping(value = "/pop_dupe", method = RequestMethod.GET)
+    public String populate_dupe() {
+        customerCreationCommand.createCustomer(new Customer(null, "rhwinzin", "Ralph", "Winzinger", "secret"));
+
+        return repository.findAll().size()+" customers created";
+    }
 }
