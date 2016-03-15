@@ -101,11 +101,8 @@ eventstore:
   volumes:
      # mount the host's /dev/urandom to speed up creating the secret
      - /dev/urandom:/dev/random
-     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/db:/var/eventstore/db
-     - /Volumes/Development/__docker_volumes/eventstore_data/cub-codewalkthrough/data/log:/var/eventstore/log
+     - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/db:/data/db
+     - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/log:/data/log
   ports:
    - "1113:1113"
    - "2113:2113"
-  environment:
-   EVENTSTORE_DB: /var/eventstore/db
-   EVENTSTORE_LOG: /var/eventstore/log
