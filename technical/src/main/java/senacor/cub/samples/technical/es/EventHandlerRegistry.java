@@ -32,8 +32,7 @@ public class EventHandlerRegistry implements InitializingBean {
         if (handlers == null) {
             System.err.println("warning: no handlers found");
         } else {
-            for (int i = 0; i < handlers.size(); i++) {
-                EventHandler eventHandler = handlers.get(i);
+            for (EventHandler eventHandler : handlers) {
                 handlerMap.put(eventHandler.getEventName(), eventHandler);
                 subscribeToEvent(eventHandler.getEventName());
                 System.out.println("would subscribe to " + eventHandler.getEventName());

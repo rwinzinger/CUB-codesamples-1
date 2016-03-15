@@ -2,19 +2,25 @@ package senacor.cub.samples.technical.es.eventstore;
 
 import akka.actor.ActorSystem;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eventstore.EventData;
-import eventstore.ExpectedVersion;
+import eventstore.*;
 import eventstore.j.EsConnection;
 import eventstore.j.EsConnectionFactory;
 import eventstore.j.EventDataBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import scala.concurrent.Await;
+import scala.concurrent.Future;
+import scala.concurrent.duration.Duration;
 import senacor.cub.samples.technical.es.Event;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * Created by rwinzing on 13.03.16.
@@ -38,13 +44,54 @@ public class EventstoreConnection {
         return esConnection;
     }
 
+    public Event readLatest(Class eventClass) {
+        System.out.println("looking for latest event of type " + eventClass.getSimpleName());
+
+        return readLatest(eventClass, event -> true);
+    }
+
+    public Event readLatest(Class eventClass, Predicate<? super Event> predicate) {
+        System.out.println("filtering by " + predicate);
+
+        final Future<ReadStreamEventsCompleted> future = getConnection().readStreamEventsBackward(eventClass.getSimpleName(), new EventNumber.Last$(), 1000, true, null);
+
+        ReadStreamEventsCompleted result = null;
+        try {
+            result = Await.result(future, Duration.create(5, "seconds"));
+        } catch (StreamNotFoundException snfe) {
+            System.out.println("no stream -> no event");
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+        System.out.println("#events found :" + result.eventsJava().size());
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        Optional<Event> event = result.eventsJava().stream().map(ev -> {
+            try {
+                return (Event) mapper.readValue(ev.data().data().value().utf8String(), eventClass);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+        }
+        }).filter(predicate).findFirst();
+
+        System.out.println("event found: "+event.isPresent());
+
+        if (event.isPresent()) {
+            return event.get();
+        }
+        return null;
+    }
+
     public void publishEvent(Event event) {
         List<Event> events = new ArrayList<>();
         events.add(event);
-        publishEvents(events, event.getClass().getSimpleName());
+        publishEvents(events);
     }
 
-    public void publishEvents(List<Event> events, String stream) {
+    public void publishEvents(List<Event> events) {
         ObjectMapper mapper = new ObjectMapper();
         List<EventData> evs = new ArrayList<EventData>();
 
@@ -52,6 +99,7 @@ public class EventstoreConnection {
             final EventData ev;
             try {
                 ev = new EventDataBuilder(event.getClass().getSimpleName())
+                        .metadata(event.getClass().getName())
                         .eventId(UUID.randomUUID())
                         .jsonData(mapper.writeValueAsString(event))
                         .build();
@@ -62,7 +110,7 @@ public class EventstoreConnection {
         }
 
         getConnection().writeEvents(
-                stream,
+                "CUB",
                 ExpectedVersion.Any$.MODULE$,
                 evs,
                 null);

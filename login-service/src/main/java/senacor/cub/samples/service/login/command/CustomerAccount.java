@@ -21,8 +21,9 @@ public class CustomerAccount extends Aggregate {
     }
 
     @Override
-    protected void apply(Event ev) {
+    public Aggregate apply(Event ev) {
         System.out.println("ev = " + ev);
+        return this;
     }
 
     public CustomerAccount(String id, String username, String password) {

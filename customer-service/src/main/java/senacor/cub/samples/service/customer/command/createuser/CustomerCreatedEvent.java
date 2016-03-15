@@ -19,4 +19,14 @@ public class CustomerCreatedEvent extends Event {
     public Customer getCustomer() {
         return customer;
     }
+
+    @Override
+    public String getAggregateName() {
+        return Customer.class.getSimpleName();
+    }
+
+    @Override
+    public String getAggregateId() {
+        return customer.getUsername();
+    }
 }

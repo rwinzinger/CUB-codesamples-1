@@ -1,0 +1,39 @@
+// CUB stream partitioned into streams per event type
+
+// CUB-by-eventType
+fromStream('CUB')
+.whenAny(function(state, ev) {
+  linkTo(ev.eventType, ev)
+})
+
+// CUB stream partitioned into streams per aggregate instance
+
+// CUB-by-aggregateInstance
+fromStream('CUB')
+.whenAny(function(state, ev) {
+  linkTo(ev.data.aggregateName+'-'+ev.data.aggregateId, ev)
+})
+
+
+
+will create streams for everything cart-related by username and by aggregateId
+
+sample event
+
+{
+            "eventStreamId": "CUB",
+            "eventNumber": 8,
+            "eventType": "CartCreatedEvent",
+            "data": {
+                "cartNo": 0,
+                "username": "emma",
+                "aggregateName": "ShoppingCart",
+                "aggregateId": "emma#0"
+            },
+            "isJson": true,
+            "readerPosition": {
+                "$s": {
+                    "CUB": 8
+                }
+            }
+        }

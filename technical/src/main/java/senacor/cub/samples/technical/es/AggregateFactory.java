@@ -4,6 +4,8 @@ import akka.actor.Status;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eventstore.EsException;
 import eventstore.EventNumber;
 import eventstore.ReadStreamEventsCompleted;
@@ -16,8 +18,12 @@ import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 import senacor.cub.samples.technical.es.eventstore.EventstoreConnection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 /**
@@ -26,9 +32,9 @@ import java.util.List;
 @Component
 public class AggregateFactory {
     @Autowired
-    private EventstoreConnection esCon;
+    private EventstoreConnection esConnection;
 
-    public Object get(Class<? extends Aggregate> clazz, String aggregateID) {
+    public Object get(Class<? extends Aggregate> clazz, String aggregateId) {
         Aggregate aggregate;
         try {
             aggregate = clazz.newInstance();
@@ -36,40 +42,39 @@ public class AggregateFactory {
             throw new RuntimeException(e);
         }
 
-        List<Event> events = new ArrayList<>();
+        String aggregateName = aggregate.getAggregateName();
+        System.out.println("rebuilding aggregate '"+aggregateName+"' with id '"+aggregateId+"' ...");
 
-        final EsConnection connection = esCon.getConnection();
-        final Future<ReadStreamEventsCompleted> future = connection.readStreamEventsForward("my-stream", new EventNumber.Exact(0), 5, true, null);
+        final EsConnection connection = esConnection.getConnection();
+        final Future<ReadStreamEventsCompleted> future = connection.readStreamEventsForward(aggregateName+"-"+aggregateId, new EventNumber.Exact(0), 1000, true, null);
 
         ReadStreamEventsCompleted result = null;
         try {
             result = Await.result(future, Duration.create(5, "seconds"));
         } catch (StreamNotFoundException snfe) {
             System.out.println("no events");
+            return null;
         } catch (Exception e) {
             throw new RuntimeException();
         }
-        System.out.println("result = " + result);
-        /*
-        Timeout timeout = new Timeout(Duration.create(5, "seconds"));
-        eventstore.Event result = null;
-        try {
-            result = Await.result(future, timeout.duration());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
 
-        // System.out.println("result = " + result.toString());
-        /*
-        List<IndexedEvent> evs = result.value().get().get().eventsJava();
-        for (int i = 0; i < evs.size(); i++) {
-            IndexedEvent indexedEvent = evs.get(i);
-            System.out.println("indexedEvent = " + indexedEvent);
-        }
+        System.out.println("#events found :" + result.eventsJava().size());
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        List<Event> events = result.eventsJava().stream().map(ev -> {
+            try {
+                System.out.println("trying to instantiate class of type '"+ev.data().metadata().value().utf8String()+"'");
+                return (Event) mapper.readValue(ev.data().data().value().utf8String(), Class.forName(ev.data().metadata().value().utf8String()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toCollection(ArrayList::new));
+
+        System.out.println("#events (after mapping/collecting): " + events.size());
+
         return aggregate.replayEvents(events);
-        */
-        return aggregate;
     }
 
     public static class ReadResult extends UntypedActor {

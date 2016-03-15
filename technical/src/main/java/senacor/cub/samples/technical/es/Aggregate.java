@@ -9,7 +9,7 @@ import java.util.List;
 public abstract class Aggregate {
     protected List<Event> events = new ArrayList<>();
 
-    protected abstract void apply(Event ev);
+    public abstract Aggregate apply(Event ev);
 
     protected String getAggregateName() {
         return this.getClass().getSimpleName();

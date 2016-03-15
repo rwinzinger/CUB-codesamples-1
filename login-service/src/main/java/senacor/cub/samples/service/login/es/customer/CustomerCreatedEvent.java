@@ -39,4 +39,14 @@ public class CustomerCreatedEvent extends Event {
                 "customer=" + customer +
                 '}';
     }
+
+    @Override
+    public String getAggregateName() {
+        return null;
+    }
+
+    @Override
+    public String getAggregateId() {
+        return null;
+    }
 }
