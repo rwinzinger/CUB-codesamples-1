@@ -27,6 +27,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 /**
  * Created by rwinzing on 14.03.16.
  */
+@CrossOrigin(origins = "http://192.168.99.100:10080")
 @RestController
 @RequestMapping(value = "/cartsrv/api/v1")
 public class CartController {

@@ -10,6 +10,7 @@ import senacor.cub.samples.service.article.command.articlelist.ArticleListComman
 import senacor.cub.samples.service.article.command.articlelist.Articles;
 import senacor.cub.samples.technical.ping.Pong;
 
+@CrossOrigin(origins = "http://192.168.99.100:10080")
 @RestController
 @RequestMapping(value = "/articlesrv/api/v1")
 public class ArticleController {
