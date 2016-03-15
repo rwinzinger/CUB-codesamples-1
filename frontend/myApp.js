@@ -72,8 +72,10 @@ myApp.controller('AppController', ['$scope', '$http', function($scope, $http) {
     .then(
       function(articleResponse) {
         $scope.articles = articleResponse.data.articles;
-        $scope.prevArticles = articleResponse.data._links.prev;
-        $scope.nextArticles = articleResponse.data._links.next;
+        if (articleResponse.data._links != null) {
+          $scope.prevArticles = articleResponse.data._links.prev;
+          $scope.nextArticles = articleResponse.data._links.next;
+        }
       },
       function(articleError) {
         // show some error msg
