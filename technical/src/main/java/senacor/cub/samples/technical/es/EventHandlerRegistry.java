@@ -52,7 +52,11 @@ public class EventHandlerRegistry implements InitializingBean {
             @Override
             public void onEvent(eventstore.Event ev, Closeable closeable) {
                 EventHandler eh = handlerMap.get(ev.data().eventType());
-                eh.handleEvent(eh.mapJsonToEvent(ev.data().data().value().utf8String()));
+                if (eh == null) {
+                    System.err.println("no handler for ev '"+ev.data().eventType()+"'");
+                } else {
+                    eh.handleEvent(eh.mapJsonToEvent(ev.data().data().value().utf8String()));
+                }
             }
 
             @Override
@@ -64,6 +68,6 @@ public class EventHandlerRegistry implements InitializingBean {
             public void onClose() {
                 System.out.println("closing subscription");
             }
-        }, false, null);
+        }, true, null);
     }
 }
