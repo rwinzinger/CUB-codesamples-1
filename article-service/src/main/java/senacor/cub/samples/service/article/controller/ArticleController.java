@@ -1,6 +1,9 @@
 package senacor.cub.samples.service.article.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import senacor.cub.samples.service.article.command.ArticleRepository;
@@ -27,8 +30,11 @@ public class ArticleController {
     }
 
     @RequestMapping(value = "/article/{articleId}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
-    public Article getArticle(@PathVariable("articleId") String articleId) {
-        return articleDetailCommand.getArticle(articleId);
+    public ResponseEntity<Article> getArticle(@PathVariable("articleId") String articleId) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setCacheControl("max-age=30");
+
+        return new ResponseEntity<Article>(articleDetailCommand.getArticle(articleId), httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/articles", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)

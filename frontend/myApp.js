@@ -100,7 +100,7 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
         function(cartResponse) {
           $scope.shoppingCart = cartResponse.data.shoppingCart;
           $scope.urls.cart = cartResponse.data.shoppingCart._links.self;
-          alert("thank you for shopping!")
+          // alert("thank you for shopping!")
         },
         function(cartError) {
           $scope.shoppingCart = null;
@@ -114,7 +114,8 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
               .then(
                 function(cartResponse) {
                   $scope.shoppingCart = cartResponse.data.shoppingCart;
-                  alert("thank you for shopping!")
+                  $scope.refreshCart();
+                  // alert("thank you for shopping!")
                 },
                 function(cartError) {
                   $scope.shoppingCart = null;
@@ -144,50 +145,7 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
       .then(
         function(cartResponse) {
           $scope.shoppingCart = cartResponse.data.shoppingCart;
-
-          var articles = [];
-          var articleDetailPromises = [];
-          for (var i = 0; i < $scope.shoppingCart.items.length; i++) {
-            var item = $scope.shoppingCart.items[i];
-
-            var promise = $http.get("http://localhost:9200/articlesrv/api/v1/article/"+item.articleId);
-            promise.then(
-            function(success) {
-              articles.push(success.data);
-            }, function(error) {
-              if (cartError.status == -1) {
-                $scope.errorMsg = "unknown error";
-              } else {
-                $scope.errorMsg = cartError.status+": "+cartError.statusText;
-              }
-            })
-            articleDetailPromises.push(promise);
-          }
-
-          $q.all(articleDetailPromises).then(
-            function(success) {
-              $scope.shoppingCart.articles = articles;
-
-              var sumArticles, sumShipping;
-
-               sumArticles = $scope.shoppingCart.articles.reduce(
-                 function(result, item) {
-                   return result+item.price;
-                 }, 0 // initial value
-               );
-               sumShipping = $scope.shoppingCart.articles.reduce(
-                 function(result, item) {
-                   return result+item.shipping;
-                 }, 0 // initial value
-               );
-               $scope.shoppingCart.sumArticles = sumArticles;
-               $scope.shoppingCart.sumShipping = sumShipping;
-               $scope.shoppingCart.overallPrice = $scope.shoppingCart.sumArticles+$scope.shoppingCart.sumShipping;
-            },
-            function(error) {
-              console.log("failed to retrieve detail");
-            }
-          )
+          $scope.refreshCart();
         },
         function(cartError) {
           if (cartError.status == -1) {
@@ -197,6 +155,52 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
           }
         }
       )
+  }
+
+  $scope.refreshCart = function() {
+    var articles = [];
+    var articleDetailPromises = [];
+    for (var i = 0; i < $scope.shoppingCart.items.length; i++) {
+      var item = $scope.shoppingCart.items[i];
+
+      var promise = $http.get("http://localhost:9200/articlesrv/api/v1/article/"+item.articleId);
+      promise.then(
+      function(success) {
+        articles.push(success.data);
+      }, function(error) {
+        if (cartError.status == -1) {
+          $scope.errorMsg = "unknown error";
+        } else {
+          $scope.errorMsg = cartError.status+": "+cartError.statusText;
+        }
+      })
+      articleDetailPromises.push(promise);
+    }
+
+    $q.all(articleDetailPromises).then(
+      function(success) {
+        $scope.shoppingCart.articles = articles;
+
+        var sumArticles, sumShipping;
+
+         sumArticles = $scope.shoppingCart.articles.reduce(
+           function(result, item) {
+             return result+item.price;
+           }, 0 // initial value
+         );
+         sumShipping = $scope.shoppingCart.articles.reduce(
+           function(result, item) {
+             return result+item.shipping;
+           }, 0 // initial value
+         );
+         $scope.shoppingCart.sumArticles = sumArticles;
+         $scope.shoppingCart.sumShipping = sumShipping;
+         $scope.shoppingCart.overallPrice = $scope.shoppingCart.sumArticles+$scope.shoppingCart.sumShipping;
+      },
+      function(error) {
+        console.log("failed to retrieve detail");
+      }
+    )
   }
 
   $scope.buyArticles = function() {
