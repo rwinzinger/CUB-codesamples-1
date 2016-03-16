@@ -47,6 +47,21 @@ article-service:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
 
+cart-service:
+  image: cub/cart-service
+  container_name: cartservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+  links:
+   - mongodb-cartservice:mongoserver
+  ports:
+   # forward the service port through the vm to the host
+   - "9300:8080"
+  environment:
+   # tell spring boot where to find mongodb
+   SPRING_DATA_MONGODB_HOST: mongoserver
+
 mongodb-customerservice:
   image: mongo
   container_name: mongo-customerservice
@@ -80,6 +95,17 @@ mongodb-articleservice:
    # forward the mongo port through the vm to the host
    - "27217:27017"
 
+mongodb-cartservice:
+  image: mongo
+  container_name: mongo-cartservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/mongo/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27317:27017"
+
 nginx:
   image: cub/nginx
   container_name: nginx
@@ -92,6 +118,7 @@ nginx:
    - login-service:loginservice
    - customer-service:customerservice
    - article-service:articleservice
+   - cart-service:cartservice
   ports:
    # forward the nginx port through the vm to the host
    - "10080:80"
