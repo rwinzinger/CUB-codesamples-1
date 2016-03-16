@@ -1,6 +1,7 @@
 package senacor.cub.samples.service.cart.command;
 
 import senacor.cub.samples.service.cart.command.additem.ItemAddedEvent;
+import senacor.cub.samples.service.cart.command.checkout.CartCheckedOutEvent;
 import senacor.cub.samples.service.cart.command.createcart.CartCreatedEvent;
 import senacor.cub.samples.service.cart.command.discardcart.CartDiscardedEvent;
 import senacor.cub.samples.technical.es.Aggregate;
@@ -85,6 +86,8 @@ public class ShoppingCart extends Aggregate {
             items.add(item);
         } else if (ev instanceof CartDiscardedEvent) {
             state = State.DISCARDED;
+        } else if (ev instanceof CartCheckedOutEvent) {
+            state = State.CHECKEDOUT;
         }
 
         return this;

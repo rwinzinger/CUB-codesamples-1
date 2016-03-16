@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import senacor.cub.samples.service.cart.command.Item;
 import senacor.cub.samples.service.cart.command.ShoppingCart;
 import senacor.cub.samples.service.cart.command.additem.AddItemCommand;
+import senacor.cub.samples.service.cart.command.checkout.CheckoutCommand;
 import senacor.cub.samples.service.cart.command.createcart.CreateCartCommand;
 import senacor.cub.samples.service.cart.command.discardcart.DiscardCartCommand;
 import senacor.cub.samples.service.cart.command.readcart.ReadCartCommand;
@@ -43,6 +44,9 @@ public class CartController {
     @Autowired
     DiscardCartCommand discardCartCmd;
 
+    @Autowired
+    CheckoutCommand checkoutCmd;
+
     @RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public Pong ping() {
         return new Pong();
@@ -64,6 +68,13 @@ public class CartController {
         ShoppingCart shoppingCart = addItemCmd.addItem(username, cartNo, item);
 
         return new ResponseEntity<>(new ShoppingCartResource(shoppingCart), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/customers/{username}/carts/{cartNo}/checkout", method = RequestMethod.POST, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> checkout(@PathVariable("username") String username, @PathVariable("cartNo") String cartNo) {
+        checkoutCmd.checkout(username, cartNo);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/customers/{username}/carts/{cartNo}/items/{itemId}", method = RequestMethod.DELETE, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)

@@ -18,8 +18,23 @@
   </div>
 
   <div class="container" id="errorpanel" ng-show="errorMsg" class="ng-hide">
-    <div class="alert alert-danger">
+    <div class="alert alert-danger fade in">
+      <a href="#" class="close" ng-click="dismissErrorMsg()">×</a>
       <strong>Error!</strong><span>&nbsp;{{ errorMsg }}</span>
+    </div>
+  </div>
+
+  <div class="container" id="warningpanel" ng-show="warnMsg" class="ng-hide">
+    <div class="alert alert-warning fade in">
+      <a href="#" class="close" ng-click="dismissWarnMsg()">×</a>
+      <strong>Warning!</strong><span>&nbsp;{{ warnMsg }}</span>
+    </div>
+  </div>
+
+  <div class="container" id="successpanel" ng-show="successMsg" class="ng-hide">
+    <div class="alert alert-success fade in">
+      <a href="#" class="close" ng-click="dismissSuccessMsg()">×</a>
+      <strong>Ok!</strong><span>&nbsp;{{ successMsg }}</span>
     </div>
   </div>
 
@@ -150,8 +165,11 @@
           </div>
           <div class="panel-footer">
             <button type="button"
-                    class="btn btn-warning btn-xs"
+                    class="btn btn-success btn-xs"
                     ng-click="buyArticles()" ng-show="shoppingCart">buy now!</button>
+            <button type="button"
+                    class="btn btn-danger btn-xs"
+                    ng-click="discardCart()" ng-show="shoppingCart">dismiss!</button>
           </div>
         </div>
       </div>
