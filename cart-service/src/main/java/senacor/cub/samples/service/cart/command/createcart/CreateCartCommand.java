@@ -32,7 +32,7 @@ public class CreateCartCommand extends Command {
 
         if (latestCart != null) {
             if (latestCart.getState() == ShoppingCart.State.OPEN) {
-                throw new CartExistsException();
+                throw new CartExistsException(latestCart.getCartNo());
             }
             cartNo = String.valueOf(Integer.parseInt(latestCart.getCartNo())+1);
         }

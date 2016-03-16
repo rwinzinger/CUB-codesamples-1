@@ -8,6 +8,8 @@ import senacor.cub.samples.technical.es.AggregateFactory;
 import senacor.cub.samples.technical.es.Command;
 import senacor.cub.samples.technical.es.eventstore.EventstoreConnection;
 
+import java.util.UUID;
+
 /**
  * Created by rwinzing on 15.03.16.
  */
@@ -26,6 +28,8 @@ public class AddItemCommand extends Command {
             throw new NoOpenCartException();
         }
 
+        // give random itemId
+        item.setItemId(UUID.randomUUID().toString());
         ItemAddedEvent itemAddedEvent = new ItemAddedEvent(username, cartNo, item.getItemId(), item.getArticleId());
         esConnection.publishEvent(itemAddedEvent);
 

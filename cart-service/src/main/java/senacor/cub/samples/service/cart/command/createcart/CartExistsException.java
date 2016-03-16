@@ -8,4 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ResponseStatus(value = HttpStatus.CONFLICT)
 public class CartExistsException extends RuntimeException {
+    // TODO find better way to transport information
+    public CartExistsException(String message) {
+        super(message);
+    }
 }
