@@ -26,79 +26,10 @@ public class ArticleController {
         return new Pong();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @RequestMapping(value = "/article/{articleid}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
-    public Article getArticle(@PathVariable("articleid") String articleid) {
-        // please implement
-        return null;
+    @RequestMapping(value = "/article/{articleId}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    public Article getArticle(@PathVariable("articleId") String articleId) {
+        return articleDetailCommand.getArticle(articleId);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @RequestMapping(value = "/articles", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public Articles getArticles(@RequestParam(value = "pn", defaultValue = "0") int pagenum, @RequestParam(value = "ps", defaultValue = "5") int pagesize) {
