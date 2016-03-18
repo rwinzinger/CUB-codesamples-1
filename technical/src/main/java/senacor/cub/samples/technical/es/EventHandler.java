@@ -10,6 +10,14 @@ import java.lang.reflect.ParameterizedType;
  * Created by rwinzing on 13.03.16.
  */
 public abstract class EventHandler<E extends Event> {
+    public void handleEvent(Integer eventNo, E event) {
+        System.out.println(event.getClass().getSimpleName()+"#"+eventNo);
+        handleEvent(event);
+        if (this instanceof CatchUpEventHandler) {
+            ((CatchUpEventHandler) this).saveLastProcessedEventNo(eventNo);
+        }
+    }
+
     public abstract void handleEvent(E event);
 
     public String getEventName() {

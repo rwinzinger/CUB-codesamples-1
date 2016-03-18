@@ -98,7 +98,7 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
   }
 
   $scope.createShoppingCart = function() {
-    $http.post("http://localhost:8080/cartsrv/api/v1/customers/"+$scope.username+"/carts")
+    $http.post("/cartsrv/api/v1/customers/"+$scope.username+"/carts")
       .then(
         function(cartResponse) {
           $scope.shoppingCart = cartResponse.data.shoppingCart;
@@ -112,7 +112,7 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
             $scope.errorMsg = "unknown error";
           } else if (cartError.status == 409) {
             $scope.warnMsg = "You already have a shopping cart!";
-            $scope.urls.cart.self = "http://localhost:8080/cartsrv/api/v1/customers/"+$scope.username+"/carts/"+cartError.data.message;
+            $scope.urls.cart.self = "/cartsrv/api/v1/customers/"+$scope.username+"/carts/"+cartError.data.message;
             $scope.urls.cart.discard = $scope.urls.cart.self;
             $http.get($scope.urls.cart.self)
               .then(
@@ -166,7 +166,7 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
     for (var i = 0; i < $scope.shoppingCart.items.length; i++) {
       var item = $scope.shoppingCart.items[i];
 
-      var promise = $http.get("http://localhost:9200/articlesrv/api/v1/article/"+item.articleId);
+      var promise = $http.get("/articlesrv/api/v1/article/"+item.articleId);
       promise.then(
       function(success) {
         articles.push(success.data);

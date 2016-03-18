@@ -1,5 +1,6 @@
 package senacor.cub.samples.technical.es;
 
+import eventstore.Position;
 import eventstore.SubscriptionObserver;
 import eventstore.j.EsConnection;
 import org.springframework.beans.factory.InitializingBean;
@@ -34,16 +35,17 @@ public class EventHandlerRegistry implements InitializingBean {
         } else {
             for (EventHandler eventHandler : handlers) {
                 handlerMap.put(eventHandler.getEventName(), eventHandler);
-                subscribeToEvent(eventHandler.getEventName());
+                subscribeToEvent(eventHandler.getEventName(), eventHandler);
                 System.out.println("would subscribe to " + eventHandler.getEventName());
             }
         }
     }
 
-    private void subscribeToEvent(String eventname) {
+    private void subscribeToEvent(String eventname, EventHandler eventHandler) {
         // TODO: use real logging
         EsConnection connection = esConnection.getConnection();
-        connection.subscribeToStream(eventname, new SubscriptionObserver<eventstore.Event>() {
+
+        SubscriptionObserver observer = new SubscriptionObserver<eventstore.Event>() {
             @Override
             public void onLiveProcessingStart(Closeable closeable) {
                 System.out.println("connected to "+closeable.toString());
@@ -55,7 +57,7 @@ public class EventHandlerRegistry implements InitializingBean {
                 if (eh == null) {
                     System.err.println("no handler for ev '"+ev.data().eventType()+"'");
                 } else {
-                    eh.handleEvent(eh.mapJsonToEvent(ev.data().data().value().utf8String()));
+                    eh.handleEvent(ev.record().number().value(), eh.mapJsonToEvent(ev.data().data().value().utf8String()));
                 }
             }
 
@@ -68,6 +70,14 @@ public class EventHandlerRegistry implements InitializingBean {
             public void onClose() {
                 System.out.println("closing subscription");
             }
-        }, true, null);
+        };
+
+        if (eventHandler instanceof CatchUpEventHandler) {
+            int lastProcessedEventNo = ((CatchUpEventHandler)eventHandler).getLastProcessedEventNo();
+            System.out.println(eventHandler.getClass().getSimpleName()+" is a catchup handler - starting from "+lastProcessedEventNo);
+            connection.subscribeToStreamFrom(eventname, observer, lastProcessedEventNo, true, null);
+        } else {
+            connection.subscribeToStream(eventname, observer, true, null);
+        }
     }
 }
