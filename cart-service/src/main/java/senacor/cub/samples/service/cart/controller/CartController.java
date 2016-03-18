@@ -58,7 +58,9 @@ public class CartController {
         ShoppingCartResource shoppingCartResource = new ShoppingCartResource(shoppingCart);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create(shoppingCartResource.getLink("self").getHref()));
+        // add handling for proxy
+        // httpHeaders.setLocation(URI.create(shoppingCartResource.getLink("self").getHref()));
+        httpHeaders.setLocation(URI.create("/customers/"+username+"/carts/"+shoppingCart.getCartId()));
 
         return new ResponseEntity<>(shoppingCartResource, httpHeaders, HttpStatus.CREATED);
     }
