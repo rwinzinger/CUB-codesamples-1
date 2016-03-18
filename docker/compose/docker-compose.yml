@@ -12,6 +12,7 @@ login-service:
   ports:
    # forward the service port through the vm to the host
    - "9000:8080"
+   - "11005:5005"
   environment:
    SPRING_PROFILES_ACTIVE: remote
    # tell spring boot where to find mongodb (if started with profile "local")
@@ -28,6 +29,7 @@ customer-service:
   ports:
    # forward the service port through the vm to the host
    - "9100:8080"
+   - "11105:5005"
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
@@ -43,6 +45,7 @@ article-service:
   ports:
    # forward the service port through the vm to the host
    - "9200:8080"
+   - "11205:5005"
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
@@ -58,6 +61,7 @@ cart-service:
   ports:
    # forward the service port through the vm to the host
    - "9300:8080"
+   - "11305:5005"
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
