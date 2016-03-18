@@ -135,3 +135,17 @@ it' possible to mount any folder inside your home-folder into your containers.
 There is a Dockerfile in docker/images/eventstore which customizes the official eventstore image (paths for db and log)
  
 Create the new image with calling docker builf -t cub/eventstore . in that folder
+
+All containers are now connected to the eventstore (but only a few events are used). Basic classes for handling events
+are EventstoreConnection, EventHandler and EventHandlerRegistry (in module technical) and the event classes in the services. For example,
+the CreateCustomerEvent in customer-service now saves a new customer to the database emits an event CustomerCreatedEvent 
+after that. The login-service defines a handler for that (CustomerCreatedEventHandler) and as soon as it receives such
+an event, it saves a new account to its own database.
+
+The logins-service uses a "catch-up" handler for that. When it connects to the eventstore, it tells the eventstore the
+id of the last processed event. The eventstore will then send all events that happend in the meantime and switch to
+"live-mode" after that.
+
+The cart-service is completely event sourced. It does not use a database to store the shopping carts but recreates
+them from past events. If a cart is needed, the cart entity (aggregate) is instantiated and all events for that cart
+are replayed. 
