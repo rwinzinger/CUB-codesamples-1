@@ -69,8 +69,8 @@
                         <skipDockerBuild>true</skipDockerBuild>
                         <imageName>dummy-wont-be-used</imageName>
                         <baseImage>java</baseImage>
-                        <entryPoint>["java", "-Xdebug", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-                        <!-- copy the service's jar file from target into the root directory of the image -->
+                        <!-- entryPoint>["java", "-Xdebug", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005", "-jar", "/${project.build.finalName}.jar"]</entryPoint -->
+                        <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                         <expose>8080</expose>
                         <resources>
                             <resource>
