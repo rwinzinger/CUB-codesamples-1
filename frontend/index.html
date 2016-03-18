@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <title>CUB restful demo</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="app.css">
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular-resource.js"></script>
@@ -40,7 +42,27 @@
 
   <div class="container" id="loginpanel" ng-hide="customer" class="ng-hide">
       <div class="panel panel-default">
-        <div class="panel-heading">User Login</div>
+        <div class="panel-heading">
+
+          <div class="row">
+            <div class="col-md-2">
+              User Login
+            </div>
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary">Mode</button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#" ng-click="setLoginMode()">Login</a></li>
+                  <li><a href="#" ng-click="setRegistrationMode()">Registration</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="panel-body">
           <div class="row">
             <div class="col-md-2">
@@ -54,7 +76,21 @@
                 placeholder="password" />
             </div>
             <div class="col-md-2">
-              <button type="button" class="btn btn-primary" ng-click="login()">Sign In!</button>
+              <button type="button" class="btn btn-primary" ng-click="login()" ng-hide="registration">Sign In!</button>
+              <button type="button" class="btn btn-danger" ng-click="register()" ng-show="registration">Register!</button>
+            </div>
+          </div>
+          <div class="row">&nbsp;</div>
+          <div class="row" ng-show="registration">
+            <div class="col-md-2">
+              <input type="text" class="form-control"
+                     ng-model="registration.firstname"
+                     placeholder="firstname" />
+            </div>
+            <div class="col-md-2">
+              <input type="text" class="form-control"
+                     ng-model="registration.lastname"
+                     placeholder="lastname" />
             </div>
           </div>
         </div>

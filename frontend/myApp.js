@@ -11,12 +11,13 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
   $scope.prevArticles = null;
   $scope.detailedArticle = null;
   $scope.shoppingCart = null;
+  $scope.registration = null;
 
   $scope.urls = {
     login : {"self":"/loginsrv/api/v1/login"},
     article : {"list":"/articlesrv/api/v1/articles"},
     cart : {},
-    customer : {}
+    customer : {"create":"/customersrv/api/v1/customer"}
   }
 
   $scope.login = function() {
@@ -48,7 +49,6 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
               }
             }
           )    
-          /* */      
         },
         function(loginError) {
           $scope.customer = null;
@@ -237,6 +237,32 @@ myApp.controller('AppController', ['$scope', '$http', '$q', function($scope, $ht
         }
       }
     )
+  }
+
+  $scope.register = function() {
+    $scope.registration.username = $scope.username;
+    $scope.registration.password = $scope.password;
+
+    $http.post($scope.urls.customer.create, $scope.registration).then(
+        function(success) {
+           $scope.successMsg = $scope.registration.username+" is now a new user";
+           $scope.shoppingCart = null;
+         }, function(error) {
+           if (error.status == -1) {
+             $scope.errorMsg = "unknown error";
+           } else {
+             $scope.errorMsg = error.status+": "+error.statusText;
+           }
+         }
+    )
+  }
+
+  $scope.setLoginMode = function() {
+    $scope.registration = null;
+  }
+
+  $scope.setRegistrationMode = function() {
+    $scope.registration = {};
   }
 
   $scope.logout = function() {

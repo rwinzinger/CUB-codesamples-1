@@ -19,14 +19,15 @@ public class CreateCustomerCommand extends Command {
     @Autowired
     private EventstoreConnection esConnection;
 
-    public Customer createCustomer(Customer customer) {
-        if (repository.findByUsername(customer.getUsername()) != null) {
+    public Customer createCustomer(Registration registration) {
+        if (repository.findByUsername(registration.getUsername()) != null) {
             throw new CustomerAlreadyExistsException();
         }
 
-        Customer newCustomer = repository.save(customer);
-        esConnection.publishEvent(new CustomerCreatedEvent(newCustomer));
+        Customer customer = new Customer(null, registration.getUsername(), registration.getFirstname(), registration.getLastname(), registration.getPassword());
+        customer = repository.save(customer);
+        esConnection.publishEvent(new CustomerCreatedEvent(customer));
 
-        return newCustomer;
+        return customer;
     }
 }

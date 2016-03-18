@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import senacor.cub.samples.service.customer.command.Customer;
 import senacor.cub.samples.service.customer.command.CustomerRepository;
 import senacor.cub.samples.service.customer.command.createuser.CreateCustomerCommand;
+import senacor.cub.samples.service.customer.command.createuser.Registration;
 import senacor.cub.samples.service.customer.command.readdetail.ReadDetailCommand;
 import senacor.cub.samples.technical.ping.Pong;
 
@@ -28,6 +29,11 @@ public class CustomerController {
 
     }
 
+    @RequestMapping(value = "/customer", method = RequestMethod.POST, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+    public Customer getCustomer(@RequestBody() Registration registration) {
+        return customerCreationCommand.createCustomer(registration);
+    }
+
     @RequestMapping(value = "/customer/{username}", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public Customer getCustomer(@PathVariable("username") String username) {
         return customerDetailCommand.getCustomerByUsername(username);
@@ -42,15 +48,15 @@ public class CustomerController {
     public String populate() {
         repository.deleteAll();
 
-        customerCreationCommand.createCustomer(new Customer(null, "rhwinzin", "Ralph", "Winzinger", "secret"));
-        customerCreationCommand.createCustomer(new Customer(null, "mmouse", "Mickey", "Mouse", "secret"));
+        customerCreationCommand.createCustomer(new Registration("rhwinzin", "Ralph", "Winzinger", "secret"));
+        customerCreationCommand.createCustomer(new Registration("mmouse", "Mickey", "Mouse", "secret"));
 
         return repository.findAll().size()+" customers created";
     }
 
     @RequestMapping(value = "/pop_dupe", method = RequestMethod.GET)
     public String populate_dupe() {
-        customerCreationCommand.createCustomer(new Customer(null, "rhwinzin", "Ralph", "Winzinger", "secret"));
+        customerCreationCommand.createCustomer(new Registration("rhwinzin", "Ralph", "Winzinger", "secret"));
 
         return repository.findAll().size()+" customers created";
     }
