@@ -1,0 +1,43 @@
+mongodb-customerservice:
+  image: mongo
+  container_name: mongo-customerservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/customer/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27017:27017"
+
+mongodb-loginservice:
+  image: mongo
+  container_name: mongo-loginservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/login/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27117:27017"
+
+mongodb-articleservice:
+  image: mongo
+  container_name: mongo-articleservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/article/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27217:27017"
+
+mongodb-cartservice:
+  image: mongo
+  container_name: mongo-cartservice
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - /Volumes/Development/__docker_volumes/mongo_data/cub-codewalkthrough/mongo/data/db:/data/db
+  ports:
+   # forward the mongo port through the vm to the host
+   - "27317:27017"
