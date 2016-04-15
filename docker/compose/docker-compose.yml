@@ -17,6 +17,10 @@ login-service:
    SPRING_PROFILES_ACTIVE: remote
    # tell spring boot where to find mongodb (if started with profile "local")
    SPRING_DATA_MONGODB_HOST: mongoserver
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 customer-service:
   image: cub/customer-service
@@ -33,6 +37,10 @@ customer-service:
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 article-service:
   image: cub/article-service
@@ -49,6 +57,10 @@ article-service:
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 cart-service:
   image: cub/cart-service
@@ -65,6 +77,10 @@ cart-service:
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 mongodb-customerservice:
   image: mongo
@@ -76,6 +92,10 @@ mongodb-customerservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27017:27017"
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 mongodb-loginservice:
   image: mongo
@@ -87,6 +107,10 @@ mongodb-loginservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27117:27017"
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 mongodb-articleservice:
   image: mongo
@@ -98,6 +122,10 @@ mongodb-articleservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27217:27017"
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 mongodb-cartservice:
   image: mongo
@@ -109,6 +137,10 @@ mongodb-cartservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27317:27017"
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 nginx:
   image: cub/nginx
@@ -126,14 +158,23 @@ nginx:
   ports:
    # forward the nginx port through the vm to the host
    - "10080:80"
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"
 
 eventstore:
   image: cub/eventstore
+  container_name: eventstore-server
   volumes:
-     # mount the host's /dev/urandom to speed up creating the secret
-     - /dev/urandom:/dev/random
-     - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/db:/var/eventstore/db
-     - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/log:/var/eventstore/db
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/db:/var/eventstore/db
+   - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/log:/var/eventstore/db
   ports:
    - "1113:1113"
    - "2113:2113"
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"

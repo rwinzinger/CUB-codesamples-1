@@ -8,6 +8,9 @@ mongodb-customerservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27017:27017"
+  log_driver: "syslog"
+  log_opt:
+    syslog-address: "tcp://192.168.99.100:5010"
 
 mongodb-loginservice:
   image: mongo
@@ -19,6 +22,9 @@ mongodb-loginservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27117:27017"
+  log_driver: "syslog"
+  log_opt:
+    syslog-address: "tcp://192.168.99.100:5010"
 
 mongodb-articleservice:
   image: mongo
@@ -30,6 +36,9 @@ mongodb-articleservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27217:27017"
+  log_driver: "syslog"
+  log_opt:
+    syslog-address: "tcp://192.168.99.100:5010"
 
 mongodb-cartservice:
   image: mongo
@@ -41,3 +50,10 @@ mongodb-cartservice:
   ports:
    # forward the mongo port through the vm to the host
    - "27317:27017"
+  log_driver: "gelf"
+  log_opt:
+    gelf-address: "udp://192.168.99.100:12201"
+
+
+
+
