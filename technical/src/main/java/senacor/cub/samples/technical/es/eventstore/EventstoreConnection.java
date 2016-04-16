@@ -8,6 +8,7 @@ import eventstore.*;
 import eventstore.j.EsConnection;
 import eventstore.j.EsConnectionFactory;
 import eventstore.j.EventDataBuilder;
+import eventstore.j.SettingsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import scala.concurrent.Await;
@@ -16,6 +17,7 @@ import scala.concurrent.duration.Duration;
 import senacor.cub.samples.technical.es.Event;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +38,14 @@ public class EventstoreConnection {
         if (esConnection == null) {
             synchronized (this) {
                 if (esConnection == null) {
-                    esConnection = EsConnectionFactory.create(actorSystem);
+                    String esServer = System.getenv().get("ES_SERVER");
+
+                    System.err.println("creating ES connection");
+                    Settings settings = new SettingsBuilder()
+                            .address(new InetSocketAddress(esServer, 1113))
+                            .defaultCredentials("admin", "changeit")
+                            .build();
+                    esConnection = EsConnectionFactory.create(actorSystem, settings);
                 }
             }
         }
