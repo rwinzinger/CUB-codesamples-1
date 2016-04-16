@@ -17,6 +17,7 @@ login-service:
    SPRING_PROFILES_ACTIVE: remote
    # tell spring boot where to find mongodb (if started with profile "local")
    SPRING_DATA_MONGODB_HOST: mongoserver
+   ES_SERVER: 192.168.99.100
   log_driver: "gelf"
   log_opt:
     tag: "{{.Name}}"
@@ -37,6 +38,7 @@ customer-service:
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
+   ES_SERVER: 192.168.99.100
   log_driver: "gelf"
   log_opt:
     tag: "{{.Name}}"
@@ -57,6 +59,7 @@ article-service:
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
+   ES_SERVER: 192.168.99.100
   log_driver: "gelf"
   log_opt:
     tag: "{{.Name}}"
@@ -77,6 +80,7 @@ cart-service:
   environment:
    # tell spring boot where to find mongodb
    SPRING_DATA_MONGODB_HOST: mongoserver
+   ES_SERVER: 192.168.99.100
   log_driver: "gelf"
   log_opt:
     tag: "{{.Name}}"
@@ -163,18 +167,3 @@ nginx:
     tag: "{{.Name}}"
     gelf-address: "udp://192.168.99.100:12201"
 
-eventstore:
-  image: cub/eventstore
-  container_name: eventstore-server
-  volumes:
-   # mount the host's /dev/urandom to speed up creating the secret
-   - /dev/urandom:/dev/random
-   - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/db:/var/eventstore/db
-   - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/log:/var/eventstore/db
-  ports:
-   - "1113:1113"
-   - "2113:2113"
-  log_driver: "gelf"
-  log_opt:
-    tag: "{{.Name}}"
-    gelf-address: "udp://192.168.99.100:12201"

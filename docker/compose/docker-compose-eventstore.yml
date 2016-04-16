@@ -1,0 +1,15 @@
+eventstore:
+  image: cub/eventstore
+  container_name: eventstore-server
+  volumes:
+   # mount the host's /dev/urandom to speed up creating the secret
+   - /dev/urandom:/dev/random
+   - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/db:/data/db
+   - $HOME/dockermounts/cub-code-walkthrough/eventstore/data/log:/data/logs
+  ports:
+   - "1113:1113"
+   - "2113:2113"
+  log_driver: "gelf"
+  log_opt:
+    tag: "{{.Name}}"
+    gelf-address: "udp://192.168.99.100:12201"

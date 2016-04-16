@@ -1,8 +1,8 @@
 FROM adbrowne/eventstore
 MAINTAINER Ralph Winzinger <ralph@winzinger-online.de>
 
-RUN mkdir -p /var/eventstore/db
-RUN mkdir -p /var/eventstore/log
+RUN mkdir -p /data/db
+RUN mkdir -p /data/logs
 
-ENV EVENTSTORE_DB /var/eventstore/db
-ENV EVENTSTORE_LOG /var/eventstore/log
+ENV EVENTSTORE_EXT_TCP_HEARTBEAT_TIMEOUT 10000
+ENV EVENTSTORE_INT_TCP_HEARTBEAT_TIMEOUT 10000
