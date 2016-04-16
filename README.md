@@ -109,10 +109,14 @@ Note: You can create environment variables with `-e` and Spring-Boot accepts pro
 
 ## Docker Compose
 
-Start all containers (login-service, customer-service, article-service and mongodb) at once with docker-compose up (in 
-folder docker/compose)
+All components can be started easily with docker-compose.
 
-All ports are forwarded as seen above.
+There are three different things to start:
+- the logging-server (docker-compose-elk.yml, Elasticsearch-Logstash-Kibana). This is optional and on slow machines you should not start it
+- the eventstore (docker-compose-eventstore.yml) to start the eventstore independently of the app
+- the app (docker-compose-app.yml) with all services, all databases and the nginx proxy
+
+All ports are forwarded as seen above and defined in the Docker files.
 
 ## nginx
 
