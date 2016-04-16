@@ -31,7 +31,7 @@ public class CustomerCreatedEventHandler extends EventHandler<CustomerCreatedEve
         EventCounter eventCounter = eventCounterRepository.findByEventname(CustomerCreatedEvent.class.getSimpleName());
 
         if (eventCounter == null) {
-            return 0;
+            return null;
         }
         return eventCounter.getLastProcessedEventNo();
     }
