@@ -1,5 +1,6 @@
 package senacor.cub.samples.service.cart.controller;
 
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 import senacor.cub.samples.service.cart.command.ShoppingCart;
 
@@ -20,8 +21,13 @@ public class ShoppingCartResource extends ResourceSupport {
         System.out.println("username = " + username);
 
         this.shoppingCart = shoppingCart;
-        this.add(linkTo(methodOn(CartController.class, username, cartNo).readShoppingCart(username, cartNo)).withSelfRel());
-        this.add(linkTo(methodOn(CartController.class, username, cartNo).discardShoppingCart(username, cartNo)).withRel("discard"));
+        // "/cartsrv/api/v1/customers/"+$scope.username+"/carts/"+cartNo
+        this.add(new Link("/cartsrv/api/v1/customers/"+username+"/carts/"+cartNo, "self"));
+        this.add(new Link("/cartsrv/api/v1/customers/"+username+"/carts/"+cartNo, "discard"));
+
+        // todo: these are absolute URLs, would currently mess-up frontend
+        // this.add(linkTo(methodOn(CartController.class, username, cartNo).readShoppingCart(username, cartNo)).withSelfRel());
+        // this.add(linkTo(methodOn(CartController.class, username, cartNo).discardShoppingCart(username, cartNo)).withRel("discard"));
     }
 
     public ShoppingCart getShoppingCart() {
