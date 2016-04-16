@@ -73,7 +73,7 @@ public class EventHandlerRegistry implements InitializingBean {
         };
 
         if (eventHandler instanceof CatchUpEventHandler) {
-            int lastProcessedEventNo = ((CatchUpEventHandler)eventHandler).getLastProcessedEventNo();
+            Integer lastProcessedEventNo = ((CatchUpEventHandler)eventHandler).getLastProcessedEventNo();
             System.out.println(eventHandler.getClass().getSimpleName()+" is a catchup handler - starting from "+lastProcessedEventNo);
             connection.subscribeToStreamFrom(eventname, observer, lastProcessedEventNo, true, null);
         } else {
