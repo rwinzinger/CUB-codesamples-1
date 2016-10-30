@@ -3,6 +3,7 @@ package senacor.cub.samples.service.article.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,18 @@ public class ArticleController {
 
         return new ResponseEntity<Article>(articleDetailCommand.getArticle(articleId), httpHeaders, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/article/{articleId}", method = RequestMethod.GET, produces = "application/pdf")
+    public ResponseEntity<byte[]> getArticleAsPdfDatasheet(@PathVariable("articleId") String articleId) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
+
+        byte[] pdfData = null; // read from new command
+
+        return new ResponseEntity<byte[]>(pdfData, httpHeaders, HttpStatus.OK);
+    }
+
+    // response.setContentType("application/pdf");
 
     @RequestMapping(value = "/articles", method = RequestMethod.GET, produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public Articles getArticles(@RequestParam(value = "pn", defaultValue = "0") int pagenum, @RequestParam(value = "ps", defaultValue = "5") int pagesize) {
